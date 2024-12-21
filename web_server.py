@@ -63,21 +63,21 @@ def handle_client(connection, address):
 
         # Generate the HTML document with the specified size
         # Build a basic HTML structure
-        html = "<HTML>\n<HEAD>\n<TITLE>I am {} bytes long</TITLE>\n</HEAD>\n<BODY>\n".format(size)
-        current_length = len(html) + len("</BODY>\n</HTML>\n")
-        # Fill the body with content to reach the desired size
-        content_size = size - current_length
-        if content_size < 0:
-            # Can't generate HTML of that size
+        header = "<HTML><HEAD><TITLE>I am {} bytes long</TITLE></HEAD><BODY>".format(size)
+        footer = "</BODY></HTML>"
+
+        # Calculate the remaining size for body content
+        fixed_length = len(header) + len(footer)
+        content_length = size - fixed_length
+
+        if content_length < 0:
             response = "HTTP/1.0 400 Bad Request\r\n\r\nBad Request"
             connection.sendall(response.encode())
             print(f"Sent response:\n{response}")
             return
 
-        # We can fill the body with any character, here we use 'a'
-        body_content = 'a' * content_size
-        html += body_content
-        html += "\n</BODY>\n</HTML>\n"
+        body_content = 'a' * content_length
+        html = header + body_content + footer
 
         # Prepare the HTTP response
         response_line = "HTTP/1.0 200 OK\r\n"
