@@ -41,11 +41,11 @@ def handle_client(connection, address):
                 print(f"Sent response:\n{response}")
                 return
 
-        # Remove leading slash '/'
+        # Remove leading slash '/' character
         if uri.startswith('/'):
             uri = uri[1:]
 
-        # Extract size
+        # Extract size from URI
         try:
             size = int(uri)
             if size < 100 or size > 20000:

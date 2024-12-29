@@ -49,7 +49,7 @@ def handle_client(client_connection, client_address):
         try:
             size = int(size_str)
             if size > 9999:
-                # Request-URI Too Long
+                # Request-URI Too Long case
                 response = "HTTP/1.0 414 Request-URI Too Long\r\n\r\nRequest-URI Too Long"
                 client_connection.sendall(response.encode())
                 print(f"Sent response to client:\n{response}")
