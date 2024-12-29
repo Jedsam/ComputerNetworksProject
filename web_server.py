@@ -17,25 +17,25 @@ def handle_client(connection, address):
         request_line = lines[0]
         parts = request_line.split()
         if len(parts) != 3:
-            # Bad Request
+            # Bad Request case
             response = "HTTP/1.0 400 Bad Request\r\n\r\nBad Request"
             connection.sendall(response.encode())
             print(f"Sent response:\n{response}")
             return
 
-        method, uri, version = parts
+        method, uri = parts[:2]
 
         if method != "GET":
             # Check if method is a valid HTTP method
             valid_methods = ["POST", "PUT", "DELETE", "HEAD", "OPTIONS", "TRACE", "CONNECT"]
             if method in valid_methods:
-                # Not Implemented
+                # Not Implemented case
                 response = "HTTP/1.0 501 Not Implemented\r\n\r\nNot Implemented"
                 connection.sendall(response.encode())
                 print(f"Sent response:\n{response}")
                 return
             else:
-                # Bad Request
+                # Bad Request case
                 response = "HTTP/1.0 400 Bad Request\r\n\r\nBad Request"
                 connection.sendall(response.encode())
                 print(f"Sent response:\n{response}")
@@ -49,20 +49,19 @@ def handle_client(connection, address):
         try:
             size = int(uri)
             if size < 100 or size > 20000:
-                # Bad Request
+                # Bad Request case
                 response = "HTTP/1.0 400 Bad Request\r\n\r\nBad Request"
                 connection.sendall(response.encode())
                 print(f"Sent response:\n{response}")
                 return
         except ValueError:
-            # URI is not an integer
+            # URI is not an integer case
             response = "HTTP/1.0 400 Bad Request\r\n\r\nBad Request"
             connection.sendall(response.encode())
             print(f"Sent response:\n{response}")
             return
 
-        # Generate the HTML document with the specified size
-        # Build a basic HTML structure
+        # Prepare the HTML content
         header = "<HTML><HEAD><TITLE>I am {} bytes long</TITLE></HEAD><BODY>".format(size)
         footer = "</BODY></HTML>"
 

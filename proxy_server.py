@@ -16,7 +16,7 @@ def handle_client(client_connection, client_address):
         request_line = lines[0]
         parts = request_line.split()
         if len(parts) < 3:
-            # Bad Request
+            # Bad Request case
             response = "HTTP/1.0 400 Bad Request\r\n\r\nBad Request"
             client_connection.sendall(response.encode())
             print(f"Sent response to client:\n{response}")
@@ -31,7 +31,6 @@ def handle_client(client_connection, client_address):
             # Parse the path
             uri_parts = uri[7:]  # Remove 'http://'
             host_port_and_path = uri_parts.split('/', 1)
-            host_port = host_port_and_path[0]
             path = '/' + host_port_and_path[1] if len(host_port_and_path) > 1 else '/'
             # Enforce that the host and port are localhost:8080
             host = 'localhost'
@@ -47,7 +46,6 @@ def handle_client(client_connection, client_address):
             size_str = path[1:]
         else:
             size_str = path
-
         try:
             size = int(size_str)
             if size > 9999:
@@ -57,7 +55,7 @@ def handle_client(client_connection, client_address):
                 print(f"Sent response to client:\n{response}")
                 return
         except ValueError:
-            # Bad Request
+            # Bad Request case
             response = "HTTP/1.0 400 Bad Request\r\n\r\nBad Request"
             client_connection.sendall(response.encode())
             print(f"Sent response to client:\n{response}")
@@ -115,7 +113,6 @@ def handle_client(client_connection, client_address):
 def main():
     # Proxy server listens on port 8888
     port = 8888
-
     # Create socket
     proxy_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # Allow reusing the socket
